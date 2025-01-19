@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Declares the HTML document type and language attribute for the page -->
+
+<head>
+    <meta charset="UTF-8">
+    <!-- Specifies the character encoding for the document (UTF-8) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Ensures proper scaling and responsive design on mobile devices -->
+    <title>Timetable Scheduling System</title>
+    <!-- Title of the webpage that appears in the browser tab -->
+
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        /* CSS for the tables to ensure they span full width, collapse borders and have a margin on top */
+        table, th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+        /* CSS for table, table headers (th), and table cells (td) */
+        th {
+            background-color: #f2f2f2;
+        }
+        /* Adds a light background color to the table header */
+    </style>
+</head>
+
+<body>
+    <h1>Timetable Scheduling System</h1>
+    <!-- Main heading of the page -->
+
+    <!-- Form for generating the timetable -->
+    <form method="post">
+        <!-- The form sends a POST request when submitted -->
+
+        <label for="section">Select Section:</label>
+        <!-- Label for the section dropdown -->
+
+        <select name="section" id="section" required>
+            <!-- Dropdown for selecting the section. "required" ensures the user selects one -->
+            
+            {% for sec in sections %}
+                <!-- Loop through a list of sections (provided by backend) -->
+                <option value="{{ sec }}">{{ sec }}</option>
+                <!-- Create a dropdown option for each section -->
+            {% endfor %}
+        </select>
+        
+        <button type="submit" name="generate_timetable">Generate Timetable</button>
+        <!-- Submit button to generate the timetable -->
+    </form>
+
+    {% if message %}
+        <p>{{ message }}</p>
+        <!-- Displays a message if it exists (e.g., a success message or error) -->
+    {% endif %}
+
+    {% if grouped_timetable %}
+        <h2>Generated Timetable for Section</h2>
+        <!-- Heading for the generated timetable -->
+
+        {% for day, entries in grouped_timetable.items() %}
+            <!-- Loop through each day in the timetable -->
+            <h3>{{ day }}</h3>
+            <!-- Displays the day (e.g., Monday, Tuesday, etc.) -->
+            <table>
+                <!-- Table to display timetable entries for the current day -->
+                <tr>
+                    <th>Time</th>
+                    <th>Subject</th>
+                    <th>Teacher</th>
+                    <th>Venue</th>
+                </tr>
+                <!-- Table headers for Time, Subject, Teacher, and Venue -->
+
+                {% for entry in entries %}
+                    <!-- Loop through each entry for the day -->
+                    <tr>
+                        <!-- Table row for each timetable entry -->
+                        <td>{{ entry.Time }}</td>
+                        <!-- Time slot for the class -->
+                        <td>{{ entry.Subject }}</td>
+                        <!-- Subject name -->
+                        <td>{{ entry.Teacher }}</td>
+                        <!-- Teacher name -->
+                        <td>{{ entry.Venue }}</td>
+                        <!-- Venue of the class -->
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Form for checking class availability -->
+    <h2>Check Class (Venue) Availability</h2>
+    <!-- Heading for checking class availability -->
+
+    <form method="POST">
+        <!-- The form sends a POST request when submitted -->
+
+        <input type="hidden" name="check_class_availability" value="true">
+        <!-- Hidden input to indicate that this form is for checking class availability -->
+
+        <label for="venue">Select Venue:</label>
+        <!-- Label for the venue dropdown -->
+        
+        <select name="venue" id="venue">
+            <!-- Dropdown for selecting a venue -->
+            {% for venue in venues %}
+                <!-- Loop through a list of venues (provided by backend) -->
+                <option value="{{ venue }}">{{ venue }}</option>
+                <!-- Create a dropdown option for each venue -->
+            {% endfor %}
+        </select>
+
+        <label for="day">Select Day:</label>
+        <!-- Label for the day dropdown -->
+
+        <select name="day" id="day">
+            <!-- Dropdown for selecting a day -->
+            {% for day in days %}
+                <!-- Loop through a list of days (provided by backend) -->
+                <option value="{{ day }}">{{ day }}</option>
+                <!-- Create a dropdown option for each day -->
+            {% endfor %}
+        </select>
+
+        <label for="time">Select Time Slot:</label>
+        <!-- Label for the time slot dropdown -->
+
+        <select name="time" id="time">
+            <!-- Dropdown for selecting a time slot -->
+            {% for time in time_slots %}
+                <!-- Loop through a list of time slots (provided by backend) -->
+                <option value="{{ time }}">{{ time }}</option>
+                <!-- Create a dropdown option for each time slot -->
+            {% endfor %}
+        </select>
+
+        <button type="submit" name="check_class_availability">Check Availability</button>
+        <!-- Submit button to check class availability -->
+    </form>
+
+    {% if class_result is not none %}
+        <p>Class Availability: {{ "Available" if class_result else "Not Available" }}</p>
+        <!-- Displays the result of the class availability check -->
+    {% endif %}
+
+    <!-- Form for checking faculty availability -->
+    <h2>Check Faculty Availability</h2>
+    <!-- Heading for checking faculty availability -->
+
+    <form method="POST">
+        <!-- The form sends a POST request when submitted -->
+
+        <input type="hidden" name="check_faculty_availability" value="true">
+        <!-- Hidden input to indicate that this form is for checking faculty availability -->
+
+        <label for="teacher">Select Teacher:</label>
+        <!-- Label for the teacher dropdown -->
+        
+        <select name="teacher" id="teacher">
+            <!-- Dropdown for selecting a teacher -->
+            {% for teacher in teachers %}
+                <!-- Loop through a list of teachers (provided by backend) -->
+                <option value="{{ teacher }}">{{ teacher }}</option>
+                <!-- Create a dropdown option for each teacher -->
+            {% endfor %}
+        </select>
+
+        <label for="day">Select Day:</label>
+        <!-- Label for the day dropdown -->
+
+        <select name="day" id="day">
+            <!-- Dropdown for selecting a day -->
+            {% for day in days %}
+                <!-- Loop through a list of days (provided by backend) -->
+                <option value="{{ day }}">{{ day }}</option>
+                <!-- Create a dropdown option for each day -->
+            {% endfor %}
+        </select>
+
+        <label for="time">Select Time Slot:</label>
+        <!-- Label for the time slot dropdown -->
+
+        <select name="time" id="time">
+            <!-- Dropdown for selecting a time slot -->
+            {% for time in time_slots %}
+                <!-- Loop through a list of time slots (provided by backend) -->
+                <option value="{{ time }}">{{ time }}</option>
+                <!-- Create a dropdown option for each time slot -->
+            {% endfor %}
+        </select>
+
+        <button type="submit" name="check_faculty_availability">Check Availability</button>
+        <!-- Submit button to check faculty availability -->
+    </form>
+
+    {% if faculty_result is not none %}
+        <p>Faculty Availability: {{ "Available" if faculty_result else "Not Available" }}</p>
+        <!-- Displays the result of the faculty availability check -->
+    {% endif %}
+
+</body>
+</html>
+
